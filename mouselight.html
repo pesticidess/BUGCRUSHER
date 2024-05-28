@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Light Effect on Image</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="lightCanvas"></canvas>
+    <div class="dark-textarea">
+      <p>
+      You see, you can't even see this big title properly in absolute dark.
+      Always turn on the lights when driving at night.
+      </p>
+    </div>
+    <div class="attention-textarea">
+      <p>
+      You probably did not notice this bunch of text at first. Without light, you won't even notice this at all.
+      During a night drive, pay 101% of attention on the road.
+      </p>
+    </div>
+    <script>
+        const canvas = document.getElementById('lightCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let mouse = {
+            x: canvas.width / 2,
+            y: canvas.height / 2
+        };
+
+        let light = {
+            x: canvas.width / 2,
+            y: canvas.height / 2
+        };
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        canvas.addEventListener('mousemove', (event) => {
+            mouse.x = event.clientX;
+            mouse.y = event.clientY;
+        });
+
+        function lerp(start, end, amt) {
+            return (1 - amt) * start + amt * end;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update the light position to move towards the mouse position
+            light.x = lerp(light.x, mouse.x, 0.1);
+            light.y = lerp(light.y, mouse.y, 0.1);
+
+            // Draw the black overlay
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Create the light effect
+            let gradient = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, 200);
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 1)'); // Fully black at the edges
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(light.x, light.y, 110, 0, Math.PI * 2, false);
+            ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+</html>
