@@ -26,10 +26,10 @@ canvas {
 }
 
 .attention-textarea {
-  margin-top: 80%;
+  margin-top: 90%;
   width: 120px;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   text-align: center;
   color: gray;
   z-index: 999;
